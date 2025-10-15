@@ -1,5 +1,7 @@
 package com.chirag.book.user;
 
+import com.chirag.book.book.Book;
+import com.chirag.book.history.BookTransaction;
 import com.chirag.book.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -40,6 +42,12 @@ public class User implements UserDetails, Principal {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
+
+    @OneToMany(mappedBy = "user")
+    private List<BookTransaction> history;
 
     @CreatedDate
     @Column(nullable = false,updatable = false)
