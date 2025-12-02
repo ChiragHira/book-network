@@ -1,5 +1,6 @@
 package com.chirag.book.handler;
 
+import com.chirag.book.exception.OperationNotPermittedException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,6 +94,16 @@ public class GlobalExceptionHandler {
                         ExceptionResponse.builder()
                                 .businessErrorCode(BusinessErrorCode.BAD_CREDENTIALS.getCode())
                                 .businessErrorDescription("Internal Server error,contact the admin")
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+    @ExceptionHandler(OperationNotPermittedException.class)
+    public ResponseEntity<ExceptionResponse> handleOperationNotPermittedException(OperationNotPermittedException exp){
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
                                 .error(exp.getMessage())
                                 .build()
                 );

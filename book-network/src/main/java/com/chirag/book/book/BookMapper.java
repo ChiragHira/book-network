@@ -1,5 +1,7 @@
 package com.chirag.book.book;
 
+import com.chirag.book.file.FileUtils;
+import com.chirag.book.history.BookTransaction;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,8 +29,19 @@ public class BookMapper {
                 .archived(book.isArchive())
                 .sharable(book.isShareable())
                 .owner(book.getOwner().getName())
-                //Todo implement this later
-                //.cover
+                .cover(FileUtils.readFileFromLocation(book.getBookCover()))
+                .build();
+    }
+
+    public BorrowBookResponse toBorrowedBookResponse(BookTransaction bookTransaction) {
+        return BorrowBookResponse.builder()
+                .id(bookTransaction.getBook().getId())
+                .title(bookTransaction.getBook().getTitle())
+                .authorName(bookTransaction.getBook().getAuthorName())
+                .isbn(bookTransaction.getBook().getIsbn())
+                .rate(bookTransaction.getBook().getRate())
+                .returned(bookTransaction.isReturned())
+                .returnedApproved(bookTransaction.isReturnedApproved())
                 .build();
     }
 }

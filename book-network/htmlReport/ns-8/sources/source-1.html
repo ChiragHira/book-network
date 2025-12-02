@@ -1,0 +1,223 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > User</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.chirag.book.user</a>
+</div>
+
+<h1>Coverage Summary for Class: User (com.chirag.book.user)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">User</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">User$HibernateInstantiator</td>
+  </tr>
+  <tr>
+    <td class="name">User$HibernateProxy</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.chirag.book.user;
+&nbsp;
+&nbsp;import com.chirag.book.book.Book;
+&nbsp;import com.chirag.book.history.BookTransaction;
+&nbsp;import com.chirag.book.role.Role;
+&nbsp;import jakarta.persistence.*;
+&nbsp;import lombok.*;
+&nbsp;import org.springframework.data.annotation.CreatedDate;
+&nbsp;import org.springframework.data.annotation.LastModifiedDate;
+&nbsp;import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+&nbsp;import org.springframework.security.core.GrantedAuthority;
+&nbsp;import org.springframework.security.core.authority.SimpleGrantedAuthority;
+&nbsp;import org.springframework.security.core.userdetails.UserDetails;
+&nbsp;
+&nbsp;import java.security.Principal;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.List;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Getter
+&nbsp;@Setter
+&nbsp;@Builder
+&nbsp;@AllArgsConstructor
+&nbsp;@NoArgsConstructor
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;user&quot;)
+&nbsp;@EntityListeners(AuditingEntityListener.class)
+&nbsp;public class User implements UserDetails, Principal {
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue
+&nbsp;    private Integer id;
+&nbsp;    private String firstname;
+&nbsp;    private String lastname;
+&nbsp;    private LocalDate dateOfBirth;
+&nbsp;    @Column(unique = true)
+&nbsp;    private String email;
+&nbsp;    private String password;
+&nbsp;    private boolean accountLocked;
+&nbsp;    private boolean enable;
+&nbsp;
+&nbsp;    @ManyToMany(fetch = FetchType.EAGER)
+&nbsp;    private List&lt;Role&gt; roles;
+&nbsp;
+&nbsp;    @OneToMany(mappedBy = &quot;owner&quot;)
+&nbsp;    private List&lt;Book&gt; books;
+&nbsp;
+&nbsp;    @OneToMany(mappedBy = &quot;user&quot;)
+&nbsp;    private List&lt;BookTransaction&gt; history;
+&nbsp;
+&nbsp;    @CreatedDate
+&nbsp;    @Column(nullable = false,updatable = false)
+&nbsp;    private LocalDate createdDate;
+&nbsp;    @LastModifiedDate
+&nbsp;    @Column(insertable = false)
+&nbsp;    private LocalDate lastModifiedDate;
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String getName() {
+<b class="nc">&nbsp;        return email;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+&nbsp;
+<b class="nc">&nbsp;        return this.roles</b>
+<b class="nc">&nbsp;                .stream()</b>
+<b class="nc">&nbsp;                .map(r -&gt; new SimpleGrantedAuthority(r.getName()))</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String getPassword() {
+<b class="nc">&nbsp;        return password;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String getUsername() {
+<b class="nc">&nbsp;        return email;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean isAccountNonExpired(){
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean isAccountNonLocked(){
+<b class="nc">&nbsp;        return !accountLocked;</b>
+&nbsp;    }
+&nbsp;    @Override
+&nbsp;    public boolean isCredentialsNonExpired(){
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean isEnabled(){
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String fullName(){
+<b class="nc">&nbsp;        return firstname+&quot; &quot;+lastname;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-28 21:38</div>
+</div>
+</body>
+</html>
