@@ -146,7 +146,7 @@ public class BookServices {
     public Integer borrowBook(Integer bookId, Authentication connectedUser) {
         Book book = bookRepository.findById(bookId).orElseThrow(()-> new EntityNotFoundException("No book found with id ::"+bookId));
 
-        if (book.isArchive() || book.isShareable()){
+        if (book.isArchive() || !book.isShareable()){
             throw  new OperationNotPermittedException("The requested book cannot be borrowed since it is archived or not sharable");
         }
 
@@ -175,7 +175,7 @@ public class BookServices {
 
         Book book = bookRepository.findById(bookId).orElseThrow(()-> new EntityNotFoundException("No book found with id ::"+bookId));
 
-        if (book.isArchive() || book.isShareable()){
+        if (book.isArchive() || !book.isShareable()){
             throw  new OperationNotPermittedException("The requested book cannot be borrowed since it is archived or not sharable");
         }
 
@@ -197,7 +197,7 @@ public class BookServices {
 
         Book book = bookRepository.findById(bookId).orElseThrow(()-> new EntityNotFoundException("No book found with id ::"+bookId));
 
-        if (book.isArchive() || book.isShareable()){
+        if (book.isArchive() || !book.isShareable()){
             throw  new OperationNotPermittedException("The requested book cannot be borrowed since it is archived or not sharable");
         }
 
