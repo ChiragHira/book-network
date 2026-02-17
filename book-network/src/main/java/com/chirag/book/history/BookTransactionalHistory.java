@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class BookTransaction extends BaseEntity {
+public class BookTransactional extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
